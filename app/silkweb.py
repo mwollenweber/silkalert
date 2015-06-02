@@ -3,10 +3,9 @@ import sys
 import traceback
 import database
 
-from config import *
 
 
-def getFiles(root='./'):
+def getFiles(root='/tmp/silkweb/'):
     files = []
     for root, dirs, files in os.walk(root):
         for file in files:
@@ -18,7 +17,8 @@ def getFiles(root='./'):
 
 
 def main():
-    print DATADIR
+    #print DATADIR
+    print getFiles()
 
     #cli-foo
 

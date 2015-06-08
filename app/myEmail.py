@@ -1,5 +1,16 @@
-__author__ = 'mjw'
+#!/usr/bin/python
+'''
 
+Copyright Matthew Wollenweber 2015
+All Rights Reserved.
+
+'''
+
+__description__ = ''
+__author__ = 'Matthew Wollenweber'
+__email__ = 'mjw@insomniac.technology'
+__version__ = '0.0.1'
+__date__ = '2015-06-08'
 
 from threading import Thread
 from flask import current_app

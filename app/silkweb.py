@@ -1,14 +1,19 @@
+import argparse
 import csv
 import os
 import sys
 import traceback
+import config
 import database
 
+from models import topTalkerFlowModel
 
 class silkIngest():
-    def __init__(self, root=None):
+    def __init__(self, root='/tmp/silkweb/'):
         print "INIT"
-        self.root = '/tmp/silkweb/'
+        self.db = topTalkerFlowModel()
+        self.root = root
+        self.fileList = []
 
     def getFiles(self):
         outlist = []
@@ -20,6 +25,7 @@ class silkIngest():
                     #print(os.path.join(root, file))
                     outlist.append(os.path.join(root, file))
 
+        self.fileList = outlist
         return outlist
 
     def ingestFiles(self):
@@ -51,15 +57,27 @@ class silkIngest():
                     percent = row[2].strip()
 
                     print "%s, %s, %s, %s, %s, %s" % (date, hour, direction, address, count, percent)
+                    self.db.insert(date, hour, direction, address, count, percent)
+
+            os.remove(filename)
+
+        except OSError:
+            traceback.print_exc(file=sys.stdout)
 
         except:
             traceback.print_exc(file=sys.stdout)
 
 def main():
 
-    mySilkIngest = silkIngest()
-
     #cli-foo
+    parser = argparse.ArgumentParser(prog='template', usage='%(prog)s [options]')
+    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--version', action='version', version='%(prog)s -1.0')
+    parser.add_argument('--debug', '-D', type=bool, dest='DEBUG', default=False)
+    args = parser.parse_args()
+    DEBUG = args.DEBUG
+
+    mySilkIngest = silkIngest()
 
     #initiate database connection
 

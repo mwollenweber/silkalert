@@ -1,10 +1,11 @@
 import os
 
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+SQLALCHEMY_DATABASE_URI = 'mysql://silkweb:silkweb@127.0.0.1/silkweb'
+
+
 class Config:
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    DATADIR = "/data/silkweb/"
-    SQLALCHEMY_DATABASE_URI = 'mysql://silkweb:silkweb@127.0.0.1/gAudit'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SSL_DISABLE = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
@@ -18,12 +19,31 @@ class Config:
     @staticmethod
     def init_app(app):
         pass
-#
-#
-# config = {
-#     'development': DevelopmentConfig,
-#     'testing': TestingConfig,
-#     'production': ProductionConfig,
-#
-#     'default': DevelopmentConfig
-# }
+
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'mysql://silkweb:silkweb@127.0.0.1/silkweb'
+
+
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    WTF_CSRF_ENABLED = False
+
+
+class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'mysql://silkweb:silkweb@127.0.0.1/silkweb'
+
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+
+
+config = {
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
+    'production': ProductionConfig,
+    'default': DevelopmentConfig
+}

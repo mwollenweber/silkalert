@@ -13,9 +13,6 @@ __version__ = '0.0.1'
 __date__ = '2015-06-08'
 
 from threading import Thread
-from flask import current_app
-
-#from app import current_app
 from flask import render_template
 from flask.ext.mail import Message
 from flask.ext import mail
